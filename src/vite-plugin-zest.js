@@ -41,6 +41,16 @@ export default (options) => {
             configData.urlPrefix = config.build?.base;
             configData.entry = config.build?.rollupOptions?.input;
             configData.manifestName = typeof config.build?.manifest === 'string' ? config.build.manifest : undefined;
+
+            if (!config.build?.manifest) {
+                config.build.manifest = true;
+            }
+
+            if (config.build?.copyPublicDir !== true) {
+                config.build.copyPublicDir = false;
+            }
+
+            return config;
         },
 
         configResolved: (config) => {
