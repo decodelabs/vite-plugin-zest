@@ -1,3 +1,6 @@
+## v0.1.3 (2025-03-05)
+* Fixed urlPrefix in config
+
 ## v0.1.2 (2025-03-05)
 * Added default config for copyPublicDir and manifest
 
