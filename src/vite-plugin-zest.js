@@ -89,15 +89,18 @@ return new Config(
         async buildEnd() {
             if (
                 process.env.NODE_ENV === 'development' &&
-                (options.buildOnExit ?? true)
+                (options.buildOnExit ?? true) &&
+                build
             ) {
                 process.env.NODE_ENV = 'production';
                 console.log(`\n`);
                 await build();
                 console.log(`\n`);
-                return;
             }
+        },
 
+        closeBundle() {
+            console.log('closeBundle');
             exec(`composer exec zest generate-build-manifest`);
         }
     }
