@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { exec } from 'child_process';
+import { exec, spawnSync } from 'child_process';
 import { build } from 'vite';
 
 export default (options) => {
@@ -23,11 +23,22 @@ export default (options) => {
         return value;
     };
 
-    const prepareAliases = (value) => {
-        return `[${Object.entries(value).map(([key, value]) => `'${key}' => ${prepareValue(value.replace(__dirname, '.'))}`).join(', ')}]`;
+    const prepareAliases = (value, root) => {
+        return `[${Object.entries(value).map(([key, value]) => `'${key}' => ${prepareValue(value.replace(root, '.'))}`).join(', ')}]`;
+    };
+
+    const getConfigArg = () => {
+        const matches = buildConfig.configFile.match(/\/vite\.([a-zA-Z0-9-_]+)\.config\.js$/);
+
+        if (matches === null) {
+            return '';
+        }
+
+        return ` -- --config=${matches[1]}`;
     };
 
     let configData = {};
+    let buildConfig = {};
 
     return {
         config: (config) => {
@@ -37,7 +48,7 @@ export default (options) => {
             configData.outDir = config.build?.outDir;
             configData.assetsDir = config.build?.assetsDir;
             configData.publicDir = config.build?.publicDir;
-            configData.resolve = config.resolve?.alias;
+            configData.aliases = config.resolve?.alias;
             configData.urlPrefix = config.base;
             configData.entry = config.build?.rollupOptions?.input;
             configData.manifestName = typeof config.build?.manifest === 'string' ? config.build.manifest : undefined;
@@ -50,10 +61,15 @@ export default (options) => {
                 config.build.copyPublicDir = false;
             }
 
+            buildConfig = config;
+
             return config;
         },
 
         configResolved: (config) => {
+            buildConfig.configFile = config.configFile;
+
+
             if (configData.port === undefined) {
                 configData.port = config.server.port;
             }
@@ -69,7 +85,7 @@ return new Config(
     outDir: ${prepareValue(configData.outDir ?? undefined, 'dist')},
     assetsDir: ${prepareValue(configData.assetsDir ?? undefined, 'assets')},
     publicDir: ${prepareValue(configData.publicDir ?? undefined, 'public')},
-    aliases: ${prepareAliases(configData.aliases ?? {})},
+    aliases: ${prepareAliases(configData.aliases ?? {}, config.root)},
     urlPrefix: ${prepareValue(configData.urlPrefix ?? undefined)},
     entry: ${prepareValue(configData.entry ?? undefined)},
     manifestName: ${prepareValue(configData.manifestName, 'manifest.json')},
@@ -82,7 +98,7 @@ return new Config(
 
         buildStart() {
             if (process.env.NODE_ENV === 'development') {
-                exec(`composer exec zest generate-dev-manifest`);
+                exec(`composer exec zest generate-dev-manifest${getConfigArg()}`);
             }
         },
 
@@ -90,17 +106,17 @@ return new Config(
             if (
                 process.env.NODE_ENV === 'development' &&
                 (options.buildOnExit ?? true) &&
-                build
+                (options.build || build)
             ) {
                 process.env.NODE_ENV = 'production';
                 console.log(`\n`);
-                await build();
+                spawnSync('composer', ['exec', 'zest', 'build', ...getConfigArg().split(' ')], { stdio: 'inherit' });
                 console.log(`\n`);
             }
         },
 
         closeBundle() {
-            exec(`composer exec zest generate-build-manifest`);
+            exec(`composer exec zest generate-build-manifest${getConfigArg()}`);
         }
     }
 };
