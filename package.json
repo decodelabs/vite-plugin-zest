@@ -1,0 +1,11 @@
+{
+    "name": "@decodelabs/vite-plugin-zest",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "keywords": [ "vite-plugin" ],
+    "main": "src/vite-plugin-zest.js",
+    "peerDependencies": {
+        "vite": "^6"
+    }
+}
