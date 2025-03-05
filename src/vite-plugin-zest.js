@@ -38,7 +38,7 @@ export default (options) => {
             configData.assetsDir = config.build?.assetsDir;
             configData.publicDir = config.build?.publicDir;
             configData.resolve = config.resolve?.alias;
-            configData.urlPrefix = config.build?.base;
+            configData.urlPrefix = config.base;
             configData.entry = config.build?.rollupOptions?.input;
             configData.manifestName = typeof config.build?.manifest === 'string' ? config.build.manifest : undefined;
 
