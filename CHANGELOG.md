@@ -1,3 +1,8 @@
+## v0.1.6 (2025-03-05)
+* Fixed alias root replacement
+* Fixed build config data for named configs
+* Switched build-after-exit to use spawn
+
 ## v0.1.5 (2025-03-05)
 * Removed closeBundle log
 
