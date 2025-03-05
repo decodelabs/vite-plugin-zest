@@ -1,3 +1,6 @@
+## v0.1.4 (2025-03-05)
+* Fixed manifest generation order
+
 ## v0.1.3 (2025-03-05)
 * Fixed urlPrefix in config
 
