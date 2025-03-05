@@ -1,3 +1,7 @@
+## v0.1.7 (2025-03-05)
+* Removed vite dependency
+* Simplified named config parameter handling
+
 ## v0.1.6 (2025-03-05)
 * Fixed alias root replacement
 * Fixed build config data for named configs

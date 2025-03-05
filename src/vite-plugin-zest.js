@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { exec, spawnSync } from 'child_process';
-import { build } from 'vite';
 
 export default (options) => {
     const prepareValue = (value, defaultValue) => {
@@ -34,7 +33,7 @@ export default (options) => {
             return '';
         }
 
-        return ` -- --config=${matches[1]}`;
+        return matches[1];
     };
 
     let configData = {};
@@ -98,25 +97,25 @@ return new Config(
 
         buildStart() {
             if (process.env.NODE_ENV === 'development') {
-                exec(`composer exec zest generate-dev-manifest${getConfigArg()}`);
+                exec(`composer exec zest generate-dev-manifest ${getConfigArg()}`);
             }
         },
 
         async buildEnd() {
             if (
                 process.env.NODE_ENV === 'development' &&
-                (options.buildOnExit ?? true) &&
-                (options.build || build)
+                (options.buildOnExit ?? true)
             ) {
                 process.env.NODE_ENV = 'production';
                 console.log(`\n`);
-                spawnSync('composer', ['exec', 'zest', 'build', ...getConfigArg().split(' ')], { stdio: 'inherit' });
+                console.log(['exec', 'zest', 'build', ...getConfigArg().split(' ')]);
+                spawnSync('composer', ['exec', 'zest', 'build', getConfigArg()], { stdio: 'inherit' });
                 console.log(`\n`);
             }
         },
 
         closeBundle() {
-            exec(`composer exec zest generate-build-manifest${getConfigArg()}`);
+            exec(`composer exec zest generate-build-manifest ${getConfigArg()}`);
         }
     }
 };
