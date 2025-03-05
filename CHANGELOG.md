@@ -1,3 +1,6 @@
+## v0.1.5 (2025-03-05)
+* Removed closeBundle log
+
 ## v0.1.4 (2025-03-05)
 * Fixed manifest generation order
 

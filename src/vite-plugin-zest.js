@@ -100,7 +100,6 @@ return new Config(
         },
 
         closeBundle() {
-            console.log('closeBundle');
             exec(`composer exec zest generate-build-manifest`);
         }
     }
