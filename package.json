@@ -1,9 +1,21 @@
 {
     "name": "@decodelabs/vite-plugin-zest",
-    "version": "0.1.0",
-    "private": true,
+    "version": "0.1.1",
+    "description": "Vite plugin for DecodeLabs Zest PHP integration",
+    "keywords": [
+        "vite-plugin"
+    ],
+    "homepage": "https://github.com/decodelabs/vite-plugin-zest#readme",
+    "bugs": {
+        "url": "https://github.com/decodelabs/vite-plugin-zest/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/decodelabs/vite-plugin-zest.git"
+    },
+    "license": "MIT",
+    "author": "Tom Wright",
     "type": "module",
-    "keywords": [ "vite-plugin" ],
     "main": "src/vite-plugin-zest.js",
     "peerDependencies": {
         "vite": "^6"
