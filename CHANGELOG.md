@@ -1,3 +1,6 @@
+## v0.2.0 (2025-03-06)
+* Save config to iota store
+
 ## v0.1.8 (2025-03-05)
 * Canonicalise alias paths
 * Removed unneeded console log

@@ -37,13 +37,39 @@ export default (options) => {
         return matches[1];
     };
 
+    // function to find composer.json in local filesystem tree with a depth of 5
+    const findComposerJson = (dir) => {
+        let i = 0;
+        let appPath = null;
+
+        while (i < 3) {
+            const path = `${dir}/composer.json`;
+
+            if (fs.existsSync(path)) {
+                appPath = dir;
+                break;
+            }
+
+            dir = path.split('/').slice(0, -1).join('/');
+
+            if (dir === '') {
+                break;
+            }
+
+            i++;
+        }
+
+        return appPath;
+    };
+
+
     let configData = {};
     let buildConfig = {};
+    const dirname = process.cwd();
 
     return {
         config: (config) => {
             const aliases = {};
-            const dirname = process.cwd();
 
             for (let [alias, aliasPath] of Object.entries(config.resolve?.alias ?? {})) {
                 if (aliasPath.startsWith('.')) {
@@ -87,11 +113,21 @@ export default (options) => {
                 configData.port = config.server.port;
             }
 
+            const appPath = findComposerJson(dirname);
+
+            if (appPath === null) {
+                console.warn('composer.json not found in local filesystem tree');
+                return;
+            }
+
+            const filename = path.basename(config.configFile).replace(/\.js$/, '.php');
+            const relPath = path.relative(appPath, dirname);
+
             const phpConfig = `
 <?php
 use DecodeLabs\\Zest\\Config\\Generic as Config;
 return new Config(
-    path: __DIR__,
+    path: ${prepareValue(relPath)},
     host: ${prepareValue(configData.host ?? undefined)},
     port: ${prepareValue(configData.port ?? undefined)},
     https: ${prepareValue(configData.https ?? undefined)},
@@ -105,8 +141,8 @@ return new Config(
 );
 `;
 
-            const filename = config.configFile.replace(/\.js$/, '.php');
-            fs.writeFileSync(filename, phpConfig.trimStart());
+
+            fs.writeFileSync(`${appPath}/.iota/${filename}`, phpConfig.trimStart());
         },
 
         buildStart() {
