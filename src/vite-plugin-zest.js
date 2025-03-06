@@ -142,7 +142,7 @@ return new Config(
 `;
 
 
-            fs.writeFileSync(`${appPath}/.iota/${filename}`, phpConfig.trimStart());
+            fs.writeFileSync(`${appPath}/.iota/zest/${filename}`, phpConfig.trimStart());
         },
 
         buildStart() {
