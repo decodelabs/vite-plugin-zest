@@ -1,3 +1,5 @@
+## v0.1.8 (2025-03-05)
+* Canonicalise alias paths
 * Removed unneeded console log
 
 ## v0.1.7 (2025-03-05)
