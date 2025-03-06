@@ -1,3 +1,6 @@
+## v0.2.1 (2025-03-06)
+* Store config in repo folder in iota store
+
 ## v0.2.0 (2025-03-06)
 * Save config to iota store
 
