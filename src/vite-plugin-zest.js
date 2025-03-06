@@ -108,7 +108,6 @@ return new Config(
             ) {
                 process.env.NODE_ENV = 'production';
                 console.log(`\n`);
-                console.log(['exec', 'zest', 'build', ...getConfigArg().split(' ')]);
                 spawnSync('composer', ['exec', 'zest', 'build', getConfigArg()], { stdio: 'inherit' });
                 console.log(`\n`);
             }
