@@ -1,3 +1,4 @@
+import path from 'path';
 import fs from 'fs';
 import { exec, spawnSync } from 'child_process';
 
@@ -41,6 +42,19 @@ export default (options) => {
 
     return {
         config: (config) => {
+            const aliases = {};
+            const dirname = process.cwd();
+
+            for (let [alias, aliasPath] of Object.entries(config.resolve?.alias ?? {})) {
+                if (aliasPath.startsWith('.')) {
+                    aliasPath = path.resolve(dirname, aliasPath);
+                }
+
+                aliases[alias] = aliasPath;
+            }
+
+            config.resolve.alias = aliases;
+
             configData.host = config.server?.host;
             configData.port = config.server?.port;
             configData.https = config.server?.https;
@@ -108,7 +122,6 @@ return new Config(
             ) {
                 process.env.NODE_ENV = 'production';
                 console.log(`\n`);
-                console.log(['exec', 'zest', 'build', ...getConfigArg().split(' ')]);
                 spawnSync('composer', ['exec', 'zest', 'build', getConfigArg()], { stdio: 'inherit' });
                 console.log(`\n`);
             }
