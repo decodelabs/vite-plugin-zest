@@ -1,3 +1,6 @@
+## v0.2.5 (2025-03-07)
+* Apply ./ as base if mergeToPublicDir is set
+
 ## v0.2.4 (2025-03-07)
 * Removed base config override
 
