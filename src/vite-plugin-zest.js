@@ -62,6 +62,10 @@ export default (options) => {
         return appPath;
     };
 
+    const randomPort = () => {
+        return Math.floor(Math.random() * (65535 - 1024 + 1)) + 1024;
+    }
+
 
     let configData = {};
     let buildConfig = {};
@@ -82,6 +86,11 @@ export default (options) => {
             config.resolve.alias = aliases;
             config.build = config.build ?? {};
 
+            if (!config.server?.port) {
+                config.server = config.server ?? {};
+                config.server.port = randomPort();
+            }
+
             if (options.mergeToPublicDir) {
                 const publicDir = config.build.publicDir ?? 'public';
                 const assetsDir = config.build.assetsDir ?? 'assets';
@@ -90,6 +99,25 @@ export default (options) => {
 
                 if (!config.base) {
                     config.base = './';
+                }
+
+                if (!config.server?.origin) {
+                    let origin = 'http';
+
+                    if (config.server?.https) {
+                        origin += 's';
+                    }
+
+                    origin += '://';
+
+                    if (config.server?.host) {
+                        origin += config.server.host;
+                    } else {
+                        origin += 'localhost';
+                    }
+
+                    origin += `:${config.server.port}`;
+                    config.server.origin = origin;
                 }
             }
 
