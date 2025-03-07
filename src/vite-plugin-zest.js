@@ -87,6 +87,10 @@ export default (options) => {
                 const assetsDir = config.build.assetsDir ?? 'assets';
                 config.build.outDir = `${publicDir}/${assetsDir}/${config.build.outDir ?? 'zest'}`;
                 config.build.assetsDir = '.';
+
+                if (!config.base) {
+                    config.base = '';
+                }
             }
 
             configData.host = config.server?.host;

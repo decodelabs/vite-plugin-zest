@@ -1,3 +1,6 @@
+## v0.2.3 (2025-03-07)
+* Set empty base if mergeToPublicDir is set
+
 ## v0.2.2 (2025-03-07)
 * Added mergeToPublicDir option
 
