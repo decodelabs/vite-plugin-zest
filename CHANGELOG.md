@@ -1,3 +1,6 @@
+## v0.2.6 (2025-03-07)
+* Add port and origin if missing from config
+
 ## v0.2.5 (2025-03-07)
 * Apply ./ as base if mergeToPublicDir is set
 
