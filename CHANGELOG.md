@@ -1,3 +1,7 @@
+## v0.2.7 (2025-03-07)
+* Added publicCacheBuster option
+* Sorted out public merge URL handling
+
 ## v0.2.6 (2025-03-07)
 * Add port and origin if missing from config
 
