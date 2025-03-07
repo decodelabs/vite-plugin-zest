@@ -37,7 +37,6 @@ export default (options) => {
         return matches[1];
     };
 
-    // function to find composer.json in local filesystem tree with a depth of 5
     const findComposerJson = (dir) => {
         let i = 0;
         let appPath = null;
@@ -70,9 +69,11 @@ export default (options) => {
     let configData = {};
     let buildConfig = {};
     const dirname = process.cwd();
+    let base;
 
     return {
         config: (config) => {
+            // Normalize aliases
             const aliases = {};
 
             for (let [alias, aliasPath] of Object.entries(config.resolve?.alias ?? {})) {
@@ -86,21 +87,32 @@ export default (options) => {
             config.resolve.alias = aliases;
             config.build = config.build ?? {};
 
+            // Ensure that the server port is set
             if (!config.server?.port) {
                 config.server = config.server ?? {};
                 config.server.port = randomPort();
             }
 
             if (options.mergeToPublicDir) {
+                // Normalize outDir
                 const publicDir = config.build.publicDir ?? 'public';
                 const assetsDir = config.build.assetsDir ?? 'assets';
                 config.build.outDir = `${publicDir}/${assetsDir}/${config.build.outDir ?? 'zest'}`;
                 config.build.assetsDir = '.';
 
+                // Normalize base
                 if (!config.base) {
-                    config.base = './';
+                    config.base = '/';
                 }
 
+                if (
+                    !config.base.startsWith('/') &&
+                    !config.base.startsWith('.')
+                ) {
+                    config.base = `/${config.base}`;
+                }
+
+                // Ensure origin is set
                 if (!config.server?.origin) {
                     let origin = 'http';
 
@@ -121,6 +133,7 @@ export default (options) => {
                 }
             }
 
+            // Create config data
             configData.host = config.server?.host;
             configData.port = config.server?.port;
             configData.https = config.server?.https;
@@ -141,12 +154,12 @@ export default (options) => {
             }
 
             buildConfig = config;
-
             return config;
         },
 
         configResolved: (config) => {
             buildConfig.configFile = config.configFile;
+            base = config.base;
 
 
             if (configData.port === undefined) {
@@ -181,8 +194,40 @@ return new Config(
 );
 `;
 
-
             fs.writeFileSync(`${appPath}/.iota/zest/${filename}`, phpConfig.trimStart());
+        },
+
+        transform(code, id) {
+            if (id.endsWith('.css')) {
+                code = code.replace(/url\("([^)]+)"\)/g, (match, url) => {
+                    if (
+                        base.startsWith('.') &&
+                        url.startsWith('__VITE_PUBLIC_ASSET_')
+                    ) {
+                        // Add a leading slash to the URL if base is a relative path
+                        if (options.mergeToPublicDir) {
+                            url = `/${url}`;
+                        }
+
+                        // Add public cache buster
+                        if (options.publicCacheBuster) {
+                            url = `${url}?v=${Date.now()}`;
+                        }
+                    } else if (
+                        base.startsWith('/') &&
+                        url.startsWith('__VITE_ASSET_')
+                    ) {
+                        // Make absolute assets relative to the base
+                        if (options.mergeToPublicDir) {
+                            url = `.${url}`;
+                        }
+                    }
+
+                    return `url("${url}")`;
+                });
+
+                return { code };
+            }
         },
 
         buildStart() {

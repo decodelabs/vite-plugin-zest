@@ -41,10 +41,22 @@ export default defineConfig({
 })
 ```
 
-This will alter your config to the following, making for a much cleaner and simpler distribution model:
+This will alter your config to allow Zest to build directly into a subdirectoy of the public directory based on your outDir setting. Under normal circumstances Vite will either break URLs to processed assets or public assets depending on whether your base is absolute or relative - the plugin updates URLs as necessary to ensure they remain valid.
+
+
+### Public file cache buster
+
+Vite does not currently add hashes to URLs pointing to public assets in generated chunks. This can cause issues with stale assets being served from the browser cache. To work around this, you can enable the <code>publicCacheBuster</code> option, which will append a query parameter to URLs pointing to public assets within CSS files.
 
 ```javascript
-{
-  outDir: `${publicDir}/${assetsDir}/${outDir}`,
-  assetsDir: '.'
-}
+import zest from '@decodelabs/vite-plugin-zest'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [
+    zest({
+      publicCacheBuster: true
+    })
+  ],
+})
+```
