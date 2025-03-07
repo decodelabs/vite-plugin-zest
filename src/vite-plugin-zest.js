@@ -80,6 +80,14 @@ export default (options) => {
             }
 
             config.resolve.alias = aliases;
+            config.build = config.build ?? {};
+
+            if (options.mergeToPublicDir) {
+                const publicDir = config.build.publicDir ?? 'public';
+                const assetsDir = config.build.assetsDir ?? 'assets';
+                config.build.outDir = `${publicDir}/${assetsDir}/${config.build.outDir ?? 'zest'}`;
+                config.build.assetsDir = '.';
+            }
 
             configData.host = config.server?.host;
             configData.port = config.server?.port;

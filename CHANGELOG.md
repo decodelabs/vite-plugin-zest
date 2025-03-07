@@ -1,3 +1,6 @@
+## v0.2.2 (2025-03-07)
+* Added mergeToPublicDir option
+
 ## v0.2.1 (2025-03-06)
 * Store config in repo folder in iota store
 
