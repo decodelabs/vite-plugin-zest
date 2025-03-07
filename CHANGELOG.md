@@ -1,3 +1,6 @@
+## v0.2.4 (2025-03-07)
+* Removed base config override
+
 ## v0.2.3 (2025-03-07)
 * Set empty base if mergeToPublicDir is set
 
