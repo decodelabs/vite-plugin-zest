@@ -43,6 +43,8 @@ export default defineConfig({
 
 This will alter your config to allow Zest to build directly into a subdirectoy of the public directory based on your outDir setting. Under normal circumstances Vite will either break URLs to processed assets or public assets depending on whether your base is absolute or relative - the plugin updates URLs as necessary to ensure they remain valid.
 
+It will also inject your relative assets dir base into the <code>modulepreload</code> block in exported js files to ensure dynamic imports resolve correctly.
+
 
 ### Public file cache buster
 
