@@ -1,3 +1,7 @@
+## v0.2.8 (2025-03-08)
+* Added module preload base path injector
+* Refactored codebase into modules
+
 ## v0.2.7 (2025-03-07)
 * Added publicCacheBuster option
 * Sorted out public merge URL handling
