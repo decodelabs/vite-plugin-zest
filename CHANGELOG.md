@@ -1,3 +1,5 @@
+* Return to dev env mode after rebuild
+
 ## v0.2.9 (2025-03-09)
 * Fixed reference in preload injector
 
