@@ -1,4 +1,7 @@
-## v0.2.8 (2025-03-08)
+## v0.2.9 (2025-03-09)
+* Fixed reference in preload injector
+
+## v0.2.8 (2025-03-09)
 * Added module preload base path injector
 * Refactored codebase into modules
 
