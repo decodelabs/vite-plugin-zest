@@ -95,6 +95,7 @@ export default (options) => {
                 // Set NODE_ENV to production to force a production build
                 process.env.NODE_ENV = 'production';
                 rebuild();
+                process.env.NODE_ENV === 'development'
             }
         },
 

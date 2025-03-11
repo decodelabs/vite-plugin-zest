@@ -108,6 +108,10 @@ return new Config(
 );
 `;
 
+    if (!fs.existsSync(`${appPath}/.iota/zest`)) {
+        fs.mkdirSync(`${appPath}/.iota/zest`, { recursive: true });
+    }
+
     fs.writeFileSync(`${appPath}/.iota/zest/${filename}`, phpConfig.trimStart());
 };
 

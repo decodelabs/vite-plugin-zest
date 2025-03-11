@@ -1,3 +1,7 @@
+## v0.2.10 (2025-03-11)
+* Ensure .iota dir exists before saving config
+* Return to dev env mode after rebuild
+
 ## v0.2.9 (2025-03-09)
 * Fixed reference in preload injector
 
