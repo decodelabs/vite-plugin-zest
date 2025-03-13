@@ -76,7 +76,7 @@ export const injectModulePreload = (code) => {
         return code;
     }
 
-    return code.replace(/const ([a-zA-Z0-9]+)="modulepreload",([a-zA-Z0-9]+)=function\(([a-zA-Z0-9]+)\){return"\/"\+([a-zA-Z0-9]+)}/, (match, M, R, e, f) => {
+    return code.replace(/const ([^=]+)="modulepreload",([^=]+)=function\(([^)]+)\){return"\/"\+([^}]+)}/, (match, M, R, e, f) => {
         return `const ${M}="modulepreload",${R}=function(${e}){return"${getVirtualBase()}/"+${f}}`;
     });
 }
