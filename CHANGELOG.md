@@ -1,3 +1,6 @@
+## v0.2.11 (2025-03-13)
+* Improved module preload matcher
+
 ## v0.2.10 (2025-03-11)
 * Ensure .iota dir exists before saving config
 * Return to dev env mode after rebuild
