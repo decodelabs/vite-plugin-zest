@@ -46,7 +46,12 @@ export default (options) => {
         },
 
         transform(code, id) {
-            if (id.endsWith('.css')) {
+            if (
+                id.endsWith('.css') ||
+                id.endsWith('.scss') ||
+                id.endsWith('.sass') ||
+                id.endsWith('.less')
+            ) {
                 code = code.replace(/url\("([^)]+)"\)/g, (match, url) => {
                     if (url.startsWith('__VITE_PUBLIC_ASSET_')) {
                         // Add a leading slash to the URL if base is a relative path
