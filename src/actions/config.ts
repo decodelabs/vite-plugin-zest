@@ -1,10 +1,21 @@
+import {
+    type AliasOptions,
+    type UserConfig
+} from 'vite';
+
 import path from 'path';
 import fs from 'fs';
 import { findComposerJson } from './external.js';
 
-export const buildConfig = {};
+type BuildConfig = UserConfig & {
+    configFile?: string;
+}
 
-export const normalizeConfig = (config) => {
+export const buildConfig: BuildConfig = {};
+
+export const normalizeConfig = (
+    config: UserConfig
+) => {
     config.build = config.build ?? {};
     config.server = config.server ?? {};
     config.resolve = config.resolve ?? {};
@@ -25,7 +36,10 @@ export const normalizeConfig = (config) => {
     return config;
 };
 
-export const normalizeAliases = (configAliases) => {
+
+export const normalizeAliases = (
+    configAliases: AliasOptions | undefined
+) => {
     const dirname = process.cwd();
     const aliases = {};
 
@@ -40,20 +54,25 @@ export const normalizeAliases = (configAliases) => {
     return aliases;
 };
 
-export const setBuildConfig = (config) => {
+export const setBuildConfig = (
+    config: UserConfig
+) => {
     for (const [key, value] of Object.entries(config)) {
         buildConfig[key] = value;
     }
 };
 
-export const setBuildConfigValue = (key, value) => {
+export const setBuildConfigValue = (
+    key: string,
+    value: any
+) => {
     buildConfig[key] = value;
 };
 
 export const getConfigArg = () => {
-    const matches = buildConfig.configFile.match(/\/vite\.([a-zA-Z0-9-_]+)\.config\.js$/);
+    const matches = buildConfig.configFile?.match(/\/vite\.([a-zA-Z0-9-_]+)\.config\.js$/);
 
-    if (matches === null) {
+    if (!matches) {
         return '';
     }
 
@@ -61,7 +80,20 @@ export const getConfigArg = () => {
 };
 
 
-const zestConfig = {};
+type ZestConfig = {
+    host?: string;
+    port?: number;
+    https?: boolean;
+    outDir?: string;
+    assetsDir?: string;
+    publicDir?: string;
+    aliases?: AliasOptions;
+    urlPrefix?: string;
+    entry?: string;
+    manifestName?: string;
+};
+
+const zestConfig: ZestConfig = {};
 
 export const createZestConfig = (config) => {
     // Create config data
@@ -78,7 +110,10 @@ export const createZestConfig = (config) => {
 };
 
 
-export const writeZestConfig = (root, configFile) => {
+export const writeZestConfig = (
+    root: string,
+    configFile: string
+): void => {
     const dirname = process.cwd();
     const appPath = findComposerJson(dirname);
 
@@ -116,7 +151,9 @@ return new Config(
 };
 
 
-export const prepareValue = (value, defaultValue) => {
+export const prepareValue = (
+    value: any,
+    defaultValue: any | undefined = undefined) => {
     if (value === undefined) {
         if (defaultValue === undefined) {
             return 'null';
@@ -136,21 +173,26 @@ export const prepareValue = (value, defaultValue) => {
     return value;
 };
 
-export const prepareAliases = (value, root) => {
+export const prepareAliases = (
+    value: AliasOptions,
+    root: string
+): string => {
     return `[${Object.entries(value).map(([key, value]) => `'${key}' => ${prepareValue(value.replace(root, '.'))}`).join(', ')}]`;
 };
 
 
-let virtualBase = '/';
+let virtualBase: string = '/';
 
-export const setVirtualBase = (base) => {
+export const setVirtualBase = (
+    base: string
+): void => {
     virtualBase = base;
 };
 
-export const getVirtualBase = () => {
+export const getVirtualBase = (): string => {
     return virtualBase;
 };
 
-export const randomPort = () => {
+export const randomPort = (): number => {
     return Math.floor(Math.random() * (65535 - 1024 + 1)) + 1024;
 };

@@ -1,3 +1,6 @@
+* Converted to typescript
+* Setup build process
+
 ## v0.2.12 (2025-03-24)
 * Added sass and less support to cache buster
 
