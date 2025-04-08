@@ -5,7 +5,9 @@ import {
 
 import path from 'path';
 import fs from 'fs';
-import { findComposerJson } from './external.js';
+import { findComposerJson } from './external';
+
+export const extensions = ['ts', 'cjs', 'mjs', 'js'];
 
 type BuildConfig = UserConfig & {
     configFile?: string;
@@ -70,7 +72,8 @@ export const setBuildConfigValue = (
 };
 
 export const getConfigArg = () => {
-    const matches = buildConfig.configFile?.match(/\/vite\.([a-zA-Z0-9-_]+)\.config\.js$/);
+    const regex = new RegExp(`\/vite\.([a-zA-Z0-9-_]+)\.config\.(${extensions.join('|')})$`);
+    const matches = buildConfig.configFile?.match(regex);
 
     if (!matches) {
         return '';
@@ -122,7 +125,8 @@ export const writeZestConfig = (
         return;
     }
 
-    const filename = path.basename(configFile).replace(/\.js$/, '.php');
+    const regex = new RegExp(`\.(${extensions.join('|')})$`);
+    const filename = path.basename(configFile).replace(regex, '.php');
     const relPath = path.relative(appPath, dirname);
 
     const phpConfig = `
