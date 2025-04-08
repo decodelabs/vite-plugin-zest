@@ -62,3 +62,7 @@ export default defineConfig({
   ],
 })
 ```
+
+## Licensing
+
+Zest is licensed under the MIT License. See [LICENSE](./LICENSE) for the full license text.

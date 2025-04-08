@@ -1,3 +1,6 @@
+## v0.3.2 (2025-04-08)
+* Fixed build-on-restart issue
+
 ## v0.3.1 (2025-04-08)
 * Added support for typescript vite config
 
