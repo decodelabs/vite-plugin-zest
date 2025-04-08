@@ -1,6 +1,6 @@
 {
     "name": "@decodelabs/vite-plugin-zest",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "Vite plugin for DecodeLabs Zest PHP integration",
     "keywords": [
         "vite-plugin"

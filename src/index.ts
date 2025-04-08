@@ -1,6 +1,7 @@
 import {
     type Plugin,
-    type UserConfig
+    type UserConfig,
+    type ViteDevServer
 } from 'vite';
 
 import {
@@ -29,7 +30,7 @@ import {
 } from './actions/public-cache-buster';
 
 export default (options): Plugin => {
-    let base;
+    let base, server;
 
     return {
         name: 'vite:zest',
@@ -52,6 +53,12 @@ export default (options): Plugin => {
             base = config.base;
             setBuildConfigValue('configFile', config.configFile);
             writeZestConfig(config.root, config.configFile as string);
+        },
+
+        configureServer(
+            _server: ViteDevServer
+        ) {
+            server = _server;
         },
 
         transform(code, id) {
@@ -107,7 +114,8 @@ export default (options): Plugin => {
         async buildEnd() {
             if (
                 process.env.NODE_ENV === 'development' &&
-                options.buildOnExit
+                options.buildOnExit &&
+                !server?._restartPromise
             ) {
                 // Set NODE_ENV to production to force a production build
                 process.env.NODE_ENV = 'production';
