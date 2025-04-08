@@ -1,3 +1,6 @@
+## v0.3.1 (2025-04-08)
+* Added support for typescript vite config
+
 ## v0.3.0 (2025-04-08)
 * Converted to typescript
 * Setup build process
