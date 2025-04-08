@@ -1,6 +1,6 @@
 {
     "name": "@decodelabs/vite-plugin-zest",
-    "version": "0.2.12",
+    "version": "0.3.0",
     "description": "Vite plugin for DecodeLabs Zest PHP integration",
     "keywords": [
         "vite-plugin"
@@ -16,8 +16,27 @@
     "license": "MIT",
     "author": "Tom Wright",
     "type": "module",
-    "main": "src/vite-plugin-zest.js",
+    "scripts": {
+        "build": "unbuild",
+        "prepack": "unbuild"
+    },
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "main": "./dist/index.cjs",
+    "module": "dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
     "peerDependencies": {
         "vite": "^6"
+    },
+    "devDependencies": {
+        "@types/node": "^22.14.0",
+        "unbuild": "^3.5.0"
     }
 }

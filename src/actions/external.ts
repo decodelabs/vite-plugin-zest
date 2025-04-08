@@ -16,9 +16,11 @@ export const rebuild = () => {
     console.log(`\n`);
 }
 
-export const findComposerJson = (dir) => {
+export const findComposerJson = (
+    dir: string
+): string | null => {
     let i = 0;
-    let appPath = null;
+    let appPath: string | null = null;
 
     while (i < 3) {
         const path = `${dir}/composer.json`;

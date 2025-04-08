@@ -1,33 +1,42 @@
 import {
+    type Plugin,
+    type UserConfig
+} from 'vite';
+
+import {
     normalizeConfig,
     setBuildConfig,
     setBuildConfigValue,
     createZestConfig,
     writeZestConfig
-} from './actions/config.js';
+} from './actions/config';
 
 import {
     generateDevManifest,
     generateBuildManifest,
     rebuild,
-} from './actions/external.js';
+} from './actions/external';
 
 import {
     prepareConfig as mergeToPublicPrepareConfig,
     modifyPublicAssetUrl as mergeToPublicModifyPublicAssetUrl,
     modifyProcessedAssetUrl as mergeToPublicModifyProcessedAssetUrl,
     injectModulePreload
-} from './actions/merge-to-public.js';
+} from './actions/merge-to-public';
 
 import {
     modifyPublicAssetUrl as publicCacheBusterModifyPublicAssetUrl
-} from './actions/public-cache-buster.js';
+} from './actions/public-cache-buster';
 
-export default (options) => {
+export default (options): Plugin => {
     let base;
 
     return {
-        config: (config) => {
+        name: 'vite:zest',
+
+        config: (
+            config: UserConfig
+        ) => {
             config = normalizeConfig(config);
 
             if (options.mergeToPublicDir) {
@@ -42,7 +51,7 @@ export default (options) => {
         configResolved: (config) => {
             base = config.base;
             setBuildConfigValue('configFile', config.configFile);
-            writeZestConfig(config.root, config.configFile);
+            writeZestConfig(config.root, config.configFile as string);
         },
 
         transform(code, id) {
@@ -80,7 +89,10 @@ export default (options) => {
 
         generateBundle(bundleOptions, bundle) {
             for (const [fileName, chunk] of Object.entries(bundle)) {
-                if (options.mergeToPublicDir) {
+                if (
+                    options.mergeToPublicDir &&
+                    chunk.type === 'chunk'
+                ) {
                     chunk.code = injectModulePreload(chunk.code);
                 }
             }
