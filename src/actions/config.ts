@@ -87,6 +87,7 @@ type ZestConfig = {
     host?: string;
     port?: number;
     https?: boolean;
+    origin?: string;
     outDir?: string;
     assetsDir?: string;
     publicDir?: string;
@@ -103,6 +104,7 @@ export const createZestConfig = (config) => {
     zestConfig.host = config.server?.host;
     zestConfig.port = config.server?.port;
     zestConfig.https = config.server?.https;
+    zestConfig.origin = config.server?.origin;
     zestConfig.outDir = config.build?.outDir;
     zestConfig.assetsDir = config.build?.assetsDir;
     zestConfig.publicDir = config.build?.publicDir;
@@ -137,6 +139,7 @@ return new Config(
     host: ${prepareValue(zestConfig.host ?? undefined)},
     port: ${prepareValue(zestConfig.port ?? undefined)},
     https: ${prepareValue(zestConfig.https ?? undefined)},
+    origin: ${prepareValue(zestConfig.origin ?? undefined)},
     outDir: ${prepareValue(zestConfig.outDir ?? undefined, 'dist')},
     assetsDir: ${prepareValue(zestConfig.assetsDir ?? undefined, 'assets')},
     publicDir: ${prepareValue(zestConfig.publicDir ?? undefined, 'public')},

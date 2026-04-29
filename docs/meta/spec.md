@@ -121,7 +121,7 @@ None.
 - PHP config file generated from Vite config.
 - Config file written to `.iota/zest/` directory.
 - Config file name: `vite.config.php` or `vite.{name}.config.php`.
-- Config includes: host, port, https, outDir, assetsDir, publicDir, aliases, urlPrefix, entry, manifestName.
+- Config includes: host, port, https, origin, outDir, assetsDir, publicDir, aliases, urlPrefix, entry, manifestName.
 - Aliases normalized (absolute paths converted to relative if within root).
 
 **Manifest Generation:**
@@ -430,4 +430,3 @@ export default defineConfig({
 - Vite documentation: https://vitejs.dev/
 - Related packages:
   - Zest: PHP library consuming generated configs and manifests
-
