@@ -1,18 +1,27 @@
 import fs from 'fs';
-import { exec, spawnSync } from 'child_process';
+import { spawnSync } from 'child_process';
 import { getConfigArg } from './config.js';
 
+const runComposer = (...args: Array<string | undefined>) => {
+    const command = ['exec', 'zest', ...args.filter(Boolean)];
+    const result = spawnSync('composer', command, { stdio: 'inherit' });
+
+    if (result.status !== 0) {
+        throw new Error(`composer ${command.join(' ')} failed`);
+    }
+};
+
 export const generateDevManifest = () => {
-    exec(`composer exec zest generate-dev-manifest ${getConfigArg()}`);
+    runComposer('generate-dev-manifest', getConfigArg());
 }
 
 export const generateBuildManifest = () => {
-    exec(`composer exec zest generate-build-manifest ${getConfigArg()}`);
+    runComposer('generate-build-manifest', getConfigArg());
 }
 
 export const rebuild = () => {
     console.log(`\n`);
-    spawnSync('composer', ['exec', 'zest', 'build', getConfigArg()], { stdio: 'inherit' });
+    runComposer('build', getConfigArg());
     console.log(`\n`);
 }
 

@@ -128,11 +128,14 @@ None.
 - Dev manifest generated via `composer exec zest generate-dev-manifest`.
 - Production manifest generated via `composer exec zest generate-build-manifest`.
 - Config name passed as argument if multiple configs present.
+- Dev-manifest generation keys off Vite's `serve` command, not ambient
+  `NODE_ENV`.
+- Composer hooks run synchronously and fail loudly if Zest cannot generate the
+  manifest.
 
 **Build on Exit:**
 - Production build triggered if `buildOnExit` enabled and dev server exiting.
 - Build triggered via `composer exec zest build`.
-- `NODE_ENV` set to `production` for build, restored to `development` after.
 - Build skipped if server restarting.
 
 **Merge to Public:**

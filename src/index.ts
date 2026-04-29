@@ -1,4 +1,5 @@
 import {
+    type ConfigEnv,
     type Plugin,
     type UserConfig,
     type ViteDevServer
@@ -31,13 +32,16 @@ import {
 
 export default (options): Plugin => {
     let base, server;
+    let command: 'serve' | 'build' | undefined;
 
     return {
         name: 'vite:zest',
 
         config: (
-            config: UserConfig
+            config: UserConfig,
+            env: ConfigEnv
         ) => {
+            command = env.command;
             config = normalizeConfig(config);
 
             if (options.mergeToPublicDir) {
@@ -106,26 +110,25 @@ export default (options): Plugin => {
         },
 
         buildStart() {
-            if (process.env.NODE_ENV === 'development') {
+            if (command === 'serve') {
                 generateDevManifest();
             }
         },
 
         async buildEnd() {
             if (
-                process.env.NODE_ENV === 'development' &&
+                command === 'serve' &&
                 options.buildOnExit &&
                 !server?._restartPromise
             ) {
-                // Set NODE_ENV to production to force a production build
-                process.env.NODE_ENV = 'production';
                 rebuild();
-                process.env.NODE_ENV === 'development'
             }
         },
 
         closeBundle() {
-            generateBuildManifest();
+            if (command === 'build') {
+                generateBuildManifest();
+            }
         }
     }
 };

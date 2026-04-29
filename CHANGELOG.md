@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Persist `server.origin` into the generated `.iota/zest/*.php` config so the
   PHP-side Zest library can cache and serve the correct public dev-server URL
   when Vite is reverse-proxied through a gateway hostname.
+- Generate dev manifests from Vite's actual `serve` command rather than
+  `NODE_ENV`, and run the Zest composer hooks synchronously so manifest
+  generation failures are visible instead of silent.
 
 ---
 
