@@ -63,6 +63,29 @@ export default defineConfig({
 })
 ```
 
+### Legacy mounted dev servers
+
+Some legacy container environments mount the project source tree through a
+filesystem where Vite's watcher registration is too slow for large CSS graphs.
+In those environments, enable <code>legacyMountDev</code>.
+
+```javascript
+import zest from '@decodelabs/vite-plugin-zest'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [
+    zest({
+      legacyMountDev: true
+    })
+  ],
+})
+```
+
+This disables Vite file watching in dev mode and refreshes CSS transforms when
+CSS files are requested. HMR is not available in this mode; refresh the browser
+to see style changes.
+
 ## Licensing
 
 Zest is licensed under the MIT License. See [LICENSE](./LICENSE) for the full license text.

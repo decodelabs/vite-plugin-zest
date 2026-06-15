@@ -18,6 +18,8 @@ Key features:
 - **Build on exit**: Optionally triggers production build when dev server exits
 - **Merge to public**: Option to merge build output into public directory
 - **Public cache busting**: Adds cache-busting query parameters to public asset URLs
+- **Legacy mounted dev mode**: Disables Vite file watching for slow mounted
+  legacy projects and refreshes CSS transforms on request
 - **URL normalization**: Handles URL normalization for merged builds
 - **Module preload injection**: Injects module preload paths for dynamic imports
 
@@ -53,6 +55,8 @@ The Zest Vite plugin belongs to the **frontend** cluster, providing the Vite-sid
   - `buildOnExit?: boolean` — Trigger production build when dev server exits
   - `mergeToPublicDir?: boolean` — Merge build output into public directory
   - `publicCacheBuster?: boolean` — Add cache-busting query parameters to public asset URLs
+  - `legacyMountDev?: boolean` — Disable file watching in dev and refresh CSS
+    transforms on request
 
 ### Main Entry Points
 
@@ -63,6 +67,8 @@ The Zest Vite plugin belongs to the **frontend** cluster, providing the Vite-sid
 - `buildOnExit?: boolean` — Trigger production build on dev server exit (default: `false`)
 - `mergeToPublicDir?: boolean` — Merge build output into public directory (default: `false`)
 - `publicCacheBuster?: boolean` — Add cache-busting to public asset URLs (default: `false`)
+- `legacyMountDev?: boolean` — Disable dev file watching and refresh CSS
+  transforms on request (default: `false`)
 
 **Plugin Hooks:**
 - `config` — Normalize Vite config and prepare Zest config
@@ -97,6 +103,7 @@ None.
 - Build on exit only triggers if dev server not restarting.
 - Public cache buster uses timestamp-based version parameter.
 - Module preload injection only applies when `mergeToPublicDir` enabled.
+- Legacy mounted dev mode only applies during Vite's `serve` command.
 
 ### Input & Output Contracts
 
@@ -116,6 +123,10 @@ None.
   - `build.assetsDir` set to `'.'`.
   - `base` normalized (ensured to start and end with `/`).
   - `server.origin` set if not specified.
+- If `legacyMountDev` is enabled during `serve`:
+  - `server.watch` is set to `null`.
+  - CSS-like dev requests clear conditional cache headers.
+  - The Vite client module graph is invalidated before CSS-like dev responses.
 
 **PHP Config Generation:**
 - PHP config file generated from Vite config.
@@ -217,6 +228,19 @@ zest({
 ```
 
 This appends `?v={timestamp}` to public asset URLs in CSS files.
+
+### Legacy Mounted Dev Mode
+
+Disable Vite file watching for slow mounted legacy source trees:
+
+```typescript
+zest({
+  legacyMountDev: true
+})
+```
+
+This mode trades HMR for responsive asset serving. Browser refreshes pick up CSS
+changes, but Vite will not watch files for automatic updates.
 
 ## Interactions with Other Packages
 

@@ -30,7 +30,56 @@ import {
     modifyPublicAssetUrl as publicCacheBusterModifyPublicAssetUrl
 } from './actions/public-cache-buster';
 
-export default (options): Plugin => {
+export type PluginOptions = {
+    buildOnExit?: boolean;
+    mergeToPublicDir?: boolean;
+    publicCacheBuster?: boolean;
+    legacyMountDev?: boolean;
+};
+
+const isStyleRequest = (
+    url: string | undefined
+): boolean => {
+    const path = url?.split('?', 1)[0] ?? '';
+
+    return (
+        path.endsWith('.css') ||
+        path.endsWith('.scss') ||
+        path.endsWith('.sass') ||
+        path.endsWith('.less')
+    );
+};
+
+const invalidateClientModules = (
+    server: ViteDevServer
+): void => {
+    const legacyServer = server as ViteDevServer & {
+        moduleGraph?: {
+            invalidateAll(): void;
+        };
+    };
+
+    const modernServer = server as ViteDevServer & {
+        environments?: {
+            client?: {
+                moduleGraph?: {
+                    invalidateAll(): void;
+                };
+            };
+        };
+    };
+
+    const modernModuleGraph = modernServer.environments?.client?.moduleGraph;
+
+    if (modernModuleGraph) {
+        modernModuleGraph.invalidateAll();
+        return;
+    }
+
+    legacyServer.moduleGraph?.invalidateAll();
+};
+
+export default (options: PluginOptions = {}): Plugin => {
     let base, server;
     let command: 'serve' | 'build' | undefined;
 
@@ -43,6 +92,14 @@ export default (options): Plugin => {
         ) => {
             command = env.command;
             config = normalizeConfig(config);
+
+            if (
+                env.command === 'serve' &&
+                options.legacyMountDev
+            ) {
+                config.server ??= {};
+                config.server.watch = null;
+            }
 
             if (options.mergeToPublicDir) {
                 config = mergeToPublicPrepareConfig(config);
@@ -63,6 +120,18 @@ export default (options): Plugin => {
             _server: ViteDevServer
         ) {
             server = _server;
+
+            if (options.legacyMountDev) {
+                server.middlewares.use((req, _res, next) => {
+                    if (isStyleRequest(req.url)) {
+                        delete req.headers['if-none-match'];
+                        delete req.headers['if-modified-since'];
+                        invalidateClientModules(server as ViteDevServer);
+                    }
+
+                    next();
+                });
+            }
         },
 
         transform(code, id) {
