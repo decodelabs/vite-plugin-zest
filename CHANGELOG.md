@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Unreleased
+
+---
+
+### [v0.3.5](https://github.com/decodelabs/vite-plugin-zest/commits/v0.3.5) - 15th June 2026
 - Add an opt-in `legacyMountDev` mode for legacy container mounts where Vite's
   watcher registration makes large CSS graphs unusably slow. The mode disables
   file watching in dev and refreshes CSS transforms on request.
@@ -14,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Generate dev manifests from Vite's actual `serve` command rather than
   `NODE_ENV`, and run the Zest composer hooks synchronously so manifest
   generation failures are visible instead of silent.
+
+[Full list of changes](https://github.com/decodelabs/vite-plugin-zest/compare/v0.3.4...v0.3.5)
 
 ---
 
